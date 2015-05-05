@@ -1,0 +1,10 @@
+<table class="uk-table uk-table-hover">
+    <thead>
+        <tr><td> Name </td><td> Student ID </td><td> IP Address </td><td>Active?</td></tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr><td> {{student.name}} </td><td> {{student.id}} </td><td> {{student.ip_addr}}</td> <td>{{student.active}}</td></tr>
+        {% endfor %}
+    </tbody> 
+</table>
