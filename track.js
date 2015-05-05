@@ -33,21 +33,22 @@ var opts = {
 }
 
 app.get('/', function(req, res) {
-	res.render('test', { 
-		// students: students
-    });
+	res.sendFile(__dirname + '/views/test.html');
 })
 
-app.get('/data/table', function(req, res) {
 
-	sql_conn.query('SELECT users.student_id as id, users.ip_address as ip_addr, CONCAT(map.first_name, " ", map.last_name) as name FROM users LEFT JOIN student_id_map as map on users.student_id = map.student_id ORDER BY map.last_name', function(err, rows, fields) {
+app.get('/data/students', function(req, res) {
+
+	sql_conn.query('SELECT users.user_id as user_id, users.student_id as student_id, users.ip_address as ip_addr, CONCAT(map.first_name, " ", map.last_name) as name FROM users LEFT JOIN student_id_map as map on users.student_id = map.student_id ORDER BY map.last_name', function(err, rows, fields) {
 		if (err) throw err;
 
-		res.render('table', {
-			students: rows
-		})
+		var data = {};
 
-		// res.send(JSON.stringify(rows));
+		rows.forEach(function(val, idx, rows) {
+			data[val.user_id] = val;
+		});
+
+		res.send(JSON.stringify(data));
 	});
 });
 
@@ -70,9 +71,9 @@ io.on('connection', function (socket) {
 
   // socket.emit('news', { hello: 'world' });
 
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+  // socket.on('my other event', function (data) {
+  //   console.log(data);
+  // });
 
 
 });
