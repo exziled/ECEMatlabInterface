@@ -33,13 +33,12 @@ hostTrack.factory('socket', function ($rootScope) {
 });
 
 hostTrack.controller('hostTrackController', function($scope, $http, socket) {
-	var hostTrackControl = this;
 
 	$http({
 		method: 'get',
 		url: '/data/students'
 	}).success(function(data, status) {
-		hostTrackControl.hosts = data;
+		$scope.hosts = data;
 	}).error(function(data, status) {
 		console.log(status);
 	});
@@ -49,8 +48,24 @@ hostTrack.controller('hostTrackController', function($scope, $http, socket) {
 	});
 
 	socket.on('updates:ip', function(data) {
-		console.log(data);
+		for (var key in $scope.hosts) {
+			$scope.hosts[key].active = 'inactive';
+		}
+		// $scope.hosts.forEach(function(val, idx, rows){
+		// 	val.active = 'inactive';
+		// });
+
+		data.forEach(function(val, idx, rows){
+			$scope.hosts[val.user_id].active = val.status;
+		});
+		
+		// $scope.$apply();
+		// console.log(data);
 	});
+
+	$scope.showDetails = function(host) {
+		$scope.selectedHost = host;
+	}
 
 	// $http.get('/data/students',function(data) {
 	// 	hostTrackControl.hosts = data;
@@ -73,7 +88,7 @@ hostTrack.controller('hostTrackController', function($scope, $http, socket) {
 	// 		},
 	// 	];
 
-	hostTrackControl.test = function() {
+	$scope.test = function() {
 		console.log("wut");
 	}
 });
