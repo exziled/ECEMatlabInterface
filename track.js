@@ -75,3 +75,25 @@ app.get('/data/students', function(req, res) {
 });
 
 
+app.post('/student/register', function(req, res) {
+	Student.findOne({ 'studentID' : req.body.studentID }, function(err, student) {
+		if (err) throw err;
+
+		student.ipAddress = req.connection.remoteAddress;
+		student.secretKey = 'abcd';
+
+		var response = {success: null, message: null};
+
+		student.save(function(err, student) {
+			if (err) {
+				response.success = false;
+			} else {
+				response.success = true;
+				response.message = "Registration Successful"
+			}
+
+			res.send(JSON.stringify(response));
+		});
+	});
+});
+

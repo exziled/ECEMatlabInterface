@@ -10,6 +10,7 @@ var submissionSchema = new Schema({
 
 var studentSchema = new Schema({
 	studentID: 		Number,
+	secretKey: 		String,
 	ipAddress: 		String,
 	firstName: 		String,
 	lastName: 		String,
