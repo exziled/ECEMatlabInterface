@@ -46,6 +46,8 @@ app.post('/admin/roster/add', function(req, res) {
 	var newStudent = Student({
 		studentID: 	req.body.studentID,
 		firstName: 	req.body.firstName,
+		lastName: 	req.body.lastName,
+		isActive: 	false
 	});
 
 	var response = {success: null, message: null};

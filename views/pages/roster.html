@@ -88,10 +88,10 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="host in hosts">
-                            <td>{{host.firstName}}</td>
-                            <td>{{host.student_id}}</td>
-                            <td>{{host.ip_addr}}</td>
-                            <td>{{host.active}}</td>
+                            <td>{{host.firstName}} {{host.lastName}}</td>
+                            <td>{{host.studentID}}</td>
+                            <td>{{host.ipAddress}}</td>
+                            <td>{{host.isActive}}</td>
                         </tr>
                     </tbody> 
                 </table>
@@ -107,13 +107,14 @@
                             <h4>Add New</h4> 
 
                             <div>
-                                <form ng-submit="submit()">
-                                    <ul>
-                                        <li>Student ID <input type="text" ng-model="formData.studentID"></li>
-                                        <li>Name <input type="text" ng-model="formData.firstName"></li>
+                                <form ng-submit="submit()" class="uk-form">
+                                    <ul style="list-style-type: none;">
+                                        <li><input placeholder="Student ID" type="text" ng-model="formData.studentID"></li>
+                                        <li><input placeholder="First Name" type="text" ng-model="formData.firstName"></li>
+                                        <li><input placeholder="Last Name" type="text" ng-model="formData.lastName"></li>
                                     </ul>
 
-                                    <input type="submit" id="submit" value="Submit">
+                                    <input class="uk-button uk-button-primary" type="submit" id="submit" value="Submit">
                                 </form>
                             </div>
                         </div>
