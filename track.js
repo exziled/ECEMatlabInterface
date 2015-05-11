@@ -21,6 +21,7 @@ db.once('open', function(callback) {
 });
 
 var Student = require('./app/models/student');
+var Submission = require('./app/models/submission')
 
 server.listen(3000);
 
@@ -93,7 +94,30 @@ app.post('/student/register', function(req, res) {
 			}
 
 			res.send(JSON.stringify(response));
+
+			// do a websocket to trigger updates
 		});
+	});
+});
+
+app.post('/student/submit', function(req, res) {
+	var constraints = {
+		'ipAddress' : req.connection.remoteAddress,
+		'secretKey' : req.body.secretKey,
+	};
+
+	// Find the student described by the submitted ip address and secret key
+	Student.findOne(constraints, function(err, student) {
+		if (err) throw err;
+
+		// create a new submission for them
+		var sub = new Submission({studentID : student._id, questionTag : req.body.questionTag, value : req.body.questionValue});
+
+		sub.save(function(err) {
+			if (err) throw err;
+
+			res.send(JSON.stringify(student));
+		});		
 	});
 });
 
