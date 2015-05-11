@@ -44,20 +44,22 @@
                 }
 
                 $scope.submitBulk = function() {
+                    var data = {'bulkData': $scope.bulkData};
+
                     $http({
                         method  : 'POST',
                         url     : '/admin/roster/add_bulk',
-                        data    : $.param($scope.bulkData),
+                        data    : $.param(data),
                         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
                     }).success(function(data) {
                         if (!data.success) {
                             console.log("submission failure");
                         } else {
-                            $scope.hosts.push(data.message);
+                            console.log(data.message);
+                            $scope.hosts = $scope.hosts.concat(data.message);
                         }
                     });
                 }
-
             });
 
         </script>

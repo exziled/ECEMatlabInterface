@@ -7,6 +7,9 @@ var io = require('socket.io')(server);
 
 var path = require('path');
 
+var csv = require('csv');
+var parser = csv.parse;
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -69,9 +72,33 @@ app.post('/admin/roster/add', function(req, res) {
 });
 
 app.post('/admin/roster/add_bulk', function(req, res) {
-	console.log(req.body);
+	var response = {success: null, message: null};
 
-	res.send(JSON.stringify({}));
+	csv.parse(req.body.bulkData, function(err, output) {
+
+		var newStudents = [];
+
+		output.forEach(function(val, idx, rows) {
+			newStudents.push({
+				studentID : val[0],
+				firstName : val[2],
+				lastName  : val[1],
+				isActive  : false
+			});
+		});
+
+		console.log(newStudents)
+
+		Student.create(newStudents, function(err, students) {
+			if (err) {
+				response.success = false;
+			} else {
+				response.success = true;
+				response.message = students;
+			}
+			res.send(JSON.stringify(response));
+		});
+	});
 });
 
 app.get('/data/students', function(req, res) {
