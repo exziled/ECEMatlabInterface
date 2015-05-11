@@ -3,6 +3,7 @@ var parser = csv.parse;
 
 var Student = require('../models/student');
 var Submission = require('../models/submission')
+var Question = require('../models/question')
 
 module.exports = function(app) {
 	app.post('/admin/roster/add', function(req, res) {
@@ -57,6 +58,27 @@ module.exports = function(app) {
 				}
 				res.send(JSON.stringify(response));
 			});
+		});
+	});
+
+
+	app.post('/admin/question/add', function(req, res) {
+		var newQuestion = Question({
+			questionTag : req.body.questionTag
+		});
+
+		var response = {success: null, message: null};
+
+		// On success, return submitted data to angular
+		newQuestion.save(function(err, question) {
+			if (err) {
+				response.success = false;
+			} else {
+				response.success = true;
+				response.message = question;
+			}
+
+			res.send(JSON.stringify(response));
 		});
 	});
 }

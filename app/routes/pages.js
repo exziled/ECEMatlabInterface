@@ -6,4 +6,8 @@ module.exports = function(app, rootPath) {
 	app.get('/roster', function(req, res) {
 		res.render('roster');
 	});
+
+	app.get('/questions', function(req, res) {
+		res.render('questions');
+	});
 }

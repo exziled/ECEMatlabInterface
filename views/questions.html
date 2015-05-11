@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+
+{% block title %} Class Roster {% endblock %}
+
+{% block angular_app %}questions{% endblock %}
+
+{% block head %}
+    {% parent %}
+    <script>
+
+    angular.module('questions', [], function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        })
+        .controller('QuestionController', function($scope, $http) {
+
+            $http({
+                method: 'get',
+                url: '/data/questions'
+            }).success(function(data, status) {
+                $scope.questions = data;
+            }).error(function(data, status) {
+                console.log(status);
+            });
+
+            $scope.submitSingle = function() {
+                $http({
+                    method  :   'POST',
+                    url     :   '/admin/question/add',
+                    data    :   $.param($scope.formData),
+                    headers :   { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function(data) {
+                    if (!data.success) {
+                        console.log("submission failure");
+                    } else {
+                        $scope.questions.push(data.message);
+                    }
+                });
+            }
+        });
+
+    </script>
+
+    <style>
+    .add_student_field input{
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="uk-grid" data-uk-grid-margin ng-controller="QuestionController">
+        <div class="uk-width-medium-3-4" >
+        <table class="uk-table uk-table-hover">
+            <thead>
+                <tr><td> Question Tag </td><td> Submission Count </td></tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="question in questions">
+                    <td>[[question.questionTag]]</td>
+                    <td></td>
+                </tr>
+            </tbody> 
+        </table>
+
+        </div>
+
+
+        <div class="uk-width-medium-1-4">
+
+            <div class ="uk-sticky-placeholder" style="height: 270px">
+
+                <div class="uk-panel uk-panel-box" data-uk-sticky="{top:35}" margin="0px">
+                    <h4>Add Single</h4> 
+
+                    <div>
+                        <form ng-submit="submitSingle()" class="uk-form">
+                                <span class="add_student_field"><input placeholder="Question Tag" type="text" ng-model="formData.questionTag"></span>
+
+                            <input class="uk-button uk-button-primary" type="submit" id="submit" value="Submit Single">
+                        </form>
+                    </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
