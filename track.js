@@ -1,8 +1,10 @@
-var scanner = require('node-libnmap');
+// var scanner = require('node-libnmap');
+
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+
 var path = require('path');
 
 var bodyParser = require('body-parser');
@@ -67,7 +69,9 @@ app.post('/admin/roster/add', function(req, res) {
 });
 
 app.post('/admin/roster/add_bulk', function(req, res) {
+	console.log(req.body);
 
+	res.send(JSON.stringify({}));
 });
 
 app.get('/data/students', function(req, res) {
