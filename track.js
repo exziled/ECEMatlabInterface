@@ -66,6 +66,10 @@ app.post('/admin/roster/add', function(req, res) {
 	});
 });
 
+app.post('/admin/roster/add_bulk', function(req, res) {
+
+});
+
 app.get('/data/students', function(req, res) {
 
 	Student.find({}, function(err, students){
@@ -129,6 +133,9 @@ app.post('/student/submit', function(req, res) {
 });
 
 
+// part of student interface
+// retreive data from an earlier submission
+// only returns the newest result, even though all are saved
 app.post('/student/check', function(req, res) {
 	var studentConstraints = {
 		'ipAddress' : req.connection.remoteAddress,

@@ -28,9 +28,7 @@
                     console.log(status);
                 });
 
-                $scope.submit = function() {
-                    $scope.stuff = 'test';
-
+                $scope.submitSingle = function() {
                     $http({
                         method  :   'POST',
                         url     :   '/admin/roster/add',
@@ -45,9 +43,33 @@
                     });
                 }
 
+                $scope.submitBulk = function() {
+                    $http({
+                        method  : 'POST',
+                        url     : '/admin/roster/add_bulk',
+                        data    : $.param($scope.bulkData),
+                        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    }).success(function(data) {
+                        if (!data.success) {
+                            console.log("submission failure");
+                        } else {
+                            $scope.hosts.push(data.message);
+                        }
+                    });
+                    })
+                }
+
             });
 
         </script>
+
+        <style>
+        .add_student_field input{
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        </style>
+
     </head>
 
     <body>
@@ -104,19 +126,24 @@
                     <div class ="uk-sticky-placeholder" style="height: 270px">
 
                         <div class="uk-panel uk-panel-box" data-uk-sticky="{top:35}" margin="0px">
-                            <h4>Add New</h4> 
+                            <h4>Add Single</h4> 
 
                             <div>
-                                <form ng-submit="submit()" class="uk-form">
-                                    <ul style="list-style-type: none;">
-                                        <li><input placeholder="Student ID" type="text" ng-model="formData.studentID"></li>
-                                        <li><input placeholder="First Name" type="text" ng-model="formData.firstName"></li>
-                                        <li><input placeholder="Last Name" type="text" ng-model="formData.lastName"></li>
-                                    </ul>
+                                <form ng-submit="submitSingle()" class="uk-form">
+                                        <span class="add_student_field"><input placeholder="Student ID" type="text" ng-model="formData.studentID"></span>
+                                        <span class="add_student_field"><input placeholder="First Name" type="text" ng-model="formData.firstName"></span>
+                                        <span class="add_student_field"><input placeholder="Last Name" type="text" ng-model="formData.lastName"></span>
 
-                                    <input class="uk-button uk-button-primary" type="submit" id="submit" value="Submit">
+                                    <input class="uk-button uk-button-primary" type="submit" id="submit" value="Submit Single">
                                 </form>
                             </div>
+
+                            <div>
+                                <form ng-submit="submitBulk()" class="uk-form">
+                                    <textarea placeholder="Enter CSV Here" ng-model="bulkData"></textarea>
+
+                                    <input class="uk-button uk-button-primary" type="submit" value="Submit Bulk">
+                                </form>
                         </div>
                     </div>
                 </div>
