@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+
+{% block title %} Class Roster {% endblock %}
+
+{% block angular_app %}roster{% endblock %}
+
+{% block head %}
+    {% parent %}
+    <script>
+
+    angular.module('roster', [], function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        })
+        .controller('RosterController', function($scope, $http) {
+
+            $http({
+                method: 'get',
+                url: '/data/students'
+            }).success(function(data, status) {
+                $scope.hosts = data;
+            }).error(function(data, status) {
+                console.log(status);
+            });
+
+            $scope.submitSingle = function() {
+                $http({
+                    method  :   'POST',
+                    url     :   '/admin/roster/add',
+                    data    :   $.param($scope.formData),
+                    headers :   { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function(data) {
+                    if (!data.success) {
+                        console.log("submission failure");
+                    } else {
+                        $scope.hosts.push(data.message);
+                    }
+                });
+            }
+
+            $scope.submitBulk = function() {
+                var data = {'bulkData': $scope.bulkData};
+
+                $http({
+                    method  : 'POST',
+                    url     : '/admin/roster/add_bulk',
+                    data    : $.param(data),
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).success(function(data) {
+                    if (!data.success) {
+                        console.log("submission failure");
+                    } else {
+                        console.log(data.message);
+                        $scope.hosts = $scope.hosts.concat(data.message);
+                    }
+                });
+            }
+        });
+
+    </script>
+
+    <style>
+    .add_student_field input{
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="uk-grid" data-uk-grid-margin ng-controller="RosterController">
+        <div class="uk-width-medium-3-4" >
+        <table class="uk-table uk-table-hover">
+            <thead>
+                <tr><td> Name </td><td> Student ID </td><td> IP Address </td><td>Active?</td></tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="host in hosts">
+                    <td>[[host.firstName]] [[host.lastName]]</td>
+                    <td>[[host.studentID]]</td>
+                    <td>[[host.ipAddress]]</td>
+                    <td>[[host.isActive]]</td>
+                </tr>
+            </tbody> 
+        </table>
+
+        </div>
+
+
+        <div class="uk-width-medium-1-4">
+
+            <div class ="uk-sticky-placeholder" style="height: 270px">
+
+                <div class="uk-panel uk-panel-box" data-uk-sticky="{top:35}" margin="0px">
+                    <h4>Add Single</h4> 
+
+                    <div>
+                        <form ng-submit="submitSingle()" class="uk-form">
+                                <span class="add_student_field"><input placeholder="Student ID" type="text" ng-model="formData.studentID"></span>
+                                <span class="add_student_field"><input placeholder="First Name" type="text" ng-model="formData.firstName"></span>
+                                <span class="add_student_field"><input placeholder="Last Name" type="text" ng-model="formData.lastName"></span>
+
+                            <input class="uk-button uk-button-primary" type="submit" id="submit" value="Submit Single">
+                        </form>
+                    </div>
+
+                    <div>
+                        <form ng-submit="submitBulk()" class="uk-form">
+                            <textarea placeholder="Enter CSV Here" ng-model="bulkData"></textarea>
+
+                            <input class="uk-button uk-button-primary" type="submit" value="Submit Bulk">
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
