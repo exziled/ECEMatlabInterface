@@ -13,14 +13,6 @@
 			$interpolateProvider.endSymbol(']]');
 		});
 
-		// hostTrack.factory('hostTrackData', function($http) {
-		//  return {
-		//      getData: function() {
-		//          return $http.get('/data/students');
-		//      }
-		//  };
-		// });
-
 		hostTrack.factory('socket', function ($rootScope) {
 		  var socket = io.connect();
 		  return {
@@ -64,46 +56,17 @@
 				for (var key in $scope.hosts) {
 					$scope.hosts[key].active = 'inactive';
 				}
-				// $scope.hosts.forEach(function(val, idx, rows){
-				//  val.active = 'inactive';
-				// });
 
 				data.forEach(function(val, idx, rows){
 					$scope.hosts[val.user_id].active = val.status;
 				});
 				
-				// $scope.$apply();
-				// console.log(data);
 			});
 
 			$scope.showDetails = function(host) {
 				$scope.selectedHost = host;
 			}
 
-			// $http.get('/data/students',function(data) {
-			//  hostTrackControl.hosts = data;
-			// })
-
-			// hostTrackControl.hosts = 
-			//  [
-			//      {
-			//          'name': 'Ben Carlson',
-			//          'id': '0755502',
-			//          'ip_addr': '192.168.1.1',
-			//          'active': '1'
-			//      },
-
-			//      {
-			//          'name': 'Ben Carlson',
-			//          'id': '0755502',
-			//          'ip_addr': '192.168.1.1',
-			//          'active': '1'
-			//      },
-			//  ];
-
-			$scope.test = function() {
-				console.log("wut");
-			}
 		});
 	</script>
 {% endblock %}
@@ -117,26 +80,21 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="host in hosts" ng-click="showDetails(host)">
-					<td>[[host.name]]</td>
-					<td>[[host.student_id]]</td>
-					<td>[[host.ip_addr]]</td>
-					<td>[[host.active]]</td>
+                    <td>[[host.firstName]] [[host.lastName]]</td>
+                    <td>[[host.studentID]]</td>
+                    <td>[[host.ipAddress]]</td>
+                    <td>[[host.isActive]]</td>
 				</tr>
 			</tbody> 
 		</table>
 
-
-
-
 		</div>
-
-
 		<div class="uk-width-medium-1-4">
 
 			<div class ="uk-sticky-placeholder" style="height: 270px">
 
 				<div class="uk-panel uk-panel-box" data-uk-sticky="{top:35}" margin="0px">
-					<h4>[[selectedHost.name]] - [[selectedHost.active]]</h4> 
+					<h4>[[selectedHost.firstName]]  [[selectedHost.lastName]] - [[selectedHost.isActive]]</h4> 
 
 					<div>
 						<span>Submissions</span>

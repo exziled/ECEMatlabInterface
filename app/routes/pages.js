@@ -1,9 +1,9 @@
 module.exports = function(app, rootPath) {
 	app.get('/', function(req, res) {
-		res.sendFile(rootPath + '/views/pages/root.html');
+		res.render('root');
 	});
 
 	app.get('/roster', function(req, res) {
-		res.sendFile(rootPath + '/views/pages/roster.html');
+		res.render('roster');
 	});
 }
