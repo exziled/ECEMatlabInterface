@@ -8,6 +8,7 @@ var studentSchema = new Schema({
 	firstName: 		String,
 	lastName: 		String,
 	isActive: 		Boolean,
+	submissions: 	[{type: Schema.ObjectId, ref: 'Submission'}]
 })
 
 var Student = mongoose.model('Student', studentSchema);

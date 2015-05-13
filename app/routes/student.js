@@ -10,6 +10,11 @@ module.exports = function(app) {
 		Student.findOne({ 'studentID' : req.body.studentID }, function(err, student) {
 			if (err) throw err;
 
+			if (student == null)
+			{
+				throw 'nope';
+			}
+
 			student.ipAddress = req.connection.remoteAddress;
 			student.secretKey = 'abcd';
 
@@ -39,18 +44,42 @@ module.exports = function(app) {
 			'secretKey' : req.body.secretKey,
 		};
 
-		// Find the student described by the submitted ip address and secret key
-		Student.findOne(studentConstraints, function(err, student) {
-			if (err) throw err;
 
-			// create a new submission for them
+		// Find the correct student based on ip address and secret key
+		Student.findOne(studentConstraints)
+		.populate({
+			path: 'submissions',
+		})		// return only the tag of each submission
+		.exec(function (err, student) {
+			if (err) throw(err);
+
+			// Create a new submission
 			var sub = new Submission({studentID : student._id, questionTag : req.body.questionTag, value : req.body.questionValue});
 
+			// Save submission and bookkeeping
 			sub.save(function(err) {
 				if (err) throw err;
 
-				res.send(JSON.stringify(student));
-			});		
+				/* hacky workaround to remove referenced documents
+				 * that have been populated and add a new document in
+				 */
+				var new_submissions = []
+
+				// Find matching tags (i.e. the submission we want to replace)
+				student.submissions.forEach(function(value, index) {
+					if (value.questionTag != req.body.questionTag)
+						new_submissions.push(value._id);
+				});
+
+				new_submissions.push(sub._id);
+
+				// Replace student array with our new array and save				
+				student.submissions = new_submissions;
+
+				student.save(function(err) {
+					res.send(JSON.stringify(student));
+				});
+			});
 		});
 	});
 
