@@ -98,9 +98,8 @@
 
 					<div>
 						<span>Submissions</span>
-						<ul>
-							<li>Question 1</li>
-							<li>Question 2</li>
+						<ul ng-repeat="submission in selectedHost.submissions">
+							<li>[[submission.questionTag]]</li>
 						</ul>
 					</div>
 				</div>
