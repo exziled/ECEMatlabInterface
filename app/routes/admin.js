@@ -5,6 +5,8 @@ var Student = require('../models/student');
 var Submission = require('../models/submission')
 var Question = require('../models/question')
 
+var questionTypes = require('../types.js');
+
 module.exports = function(app) {
 	app.post('/admin/roster/add', function(req, res) {
 		
@@ -63,8 +65,20 @@ module.exports = function(app) {
 
 
 	app.post('/admin/question/add', function(req, res) {
+		console.log(req.body);
+
+		// typeEnum = 
+
+		if (req.body.questionType == "filter"){
+			typeEnum = questionTypes.questionTypes.FILTER;
+		} else if (req.body.questionType == "analysis") {
+			typeEnum = questionTypes.questionTypes.ANALYSIS;
+		}
+
 		var newQuestion = Question({
-			questionTag : req.body.questionTag
+			questionTag 	: 	req.body.questionTag,
+			questionType 	: 	typeEnum,
+			questionData	: 	req.body.questionData
 		});
 
 		var response = {success: null, message: null};

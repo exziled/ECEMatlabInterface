@@ -78,7 +78,8 @@
                     <div>
                         <form ng-submit="submitSingle()" class="uk-form">
                                 <span class="add_student_field"><input placeholder="Question Tag" type="text" ng-model="formData.questionTag"></span>
-
+                                <span class="add_student_field"><select ng-model="formData.questionType"><option value="filter">Filter</option><option value="analysis">Analysis</option></select></span>
+                                <span class="add_student_field"><textarea ng-model="formData.questionData"></textarea>
                             <input class="uk-button uk-button-primary" type="submit" id="submit" value="Submit Single">
                         </form>
                     </div>
