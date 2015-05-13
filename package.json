@@ -1,0 +1,12 @@
+{
+	"name" : "ECEMatlabInterface",
+	"version": "0.0.1",
+	"author": "Benjamin Carlson",
+	"dependencies": {
+		"express": "*",
+		"swig" : "*",
+		"body-parser" : "*",
+		"mongoose" : "*",
+		"csv" : "*"
+	}
+}
