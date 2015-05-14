@@ -1,6 +1,4 @@
 
-var enums = require('enums');
-
 /* Question Type */
 
 exports.questionTypes = Object.freeze({"FILTER": 1, "ANALYSIS": 2})

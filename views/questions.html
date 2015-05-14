@@ -55,11 +55,13 @@
         <div class="uk-width-medium-3-4" >
         <table class="uk-table uk-table-hover">
             <thead>
-                <tr><td> Question Tag </td><td> Submission Count </td></tr>
+                <tr><td> Question Tag </td><td>Type</td><td>Data</td><td> Submission Count </td></tr>
             </thead>
             <tbody>
                 <tr ng-repeat="question in questions">
                     <td>[[question.questionTag]]</td>
+                    <td>[[question.questionType]]</td>
+                    <td>[[question.questionData]]</td>
                     <td></td>
                 </tr>
             </tbody> 
